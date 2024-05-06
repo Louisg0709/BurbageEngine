@@ -1,21 +1,33 @@
-#include <iostream>
 #include "include/burbage.h"
 #include <type_traits>
-
-void HelloProj(){
-    printf("Hello Burbage!");
-}
 
 /*
 * App Class Definitions
 */
 
 template<class EType>
+void App::CreateEntity()
+{
+	if (std::is_base_of<Entity, EType>::value) {
+		COMPONENT_ID_DATA_TYPE MinID = FindMinAvailabeID();
+		if (MinID) {
+			EntityArr.push_back(EType(MinID));
+		}
+		else {
+			//Send warning to the apps log
+		}
+	}
+	else {
+		//Send warning to apps log
+	}
+}
+
+template<class EType>
 std::vector<EType*> App::GetEntitiesFromType()
 {
 	std::vector<EType*> List;
 	if (std::is_base_of<Entity, EType>::value) {
-		for (ENTITY_ID_DATA_TYPE i = 0; i <= EntityArr.size(), i++) {
+		for (ENTITY_ID_DATA_TYPE i = 0; i <= EntityArr.size(); i++) {
 			EType* CurrentObj = static_cast<EType*>(&EntityArr[i]);
 			if (CurrentObj) {
 				List.push_back(CurrentObj);
@@ -27,6 +39,26 @@ std::vector<EType*> App::GetEntitiesFromType()
 		//Send warning to the apps log
 	}
 	return false;
+}
+
+void App::Tick(float DeltaTime)
+{
+	for (ENTITY_ID_DATA_TYPE i = 0; i <= EntityArr.size(); i++) {
+		EntityArr[i].Tick(DeltaTime);
+	}
+}
+
+void App::Reset()
+{
+	for (ENTITY_ID_DATA_TYPE i = 0; i <= EntityArr.size(); i++) {
+		EntityArr[i].Reset();
+	}
+}
+
+void App::RemoveEntity(ENTITY_ID_DATA_TYPE ID)
+{
+	ENTITY_ID_DATA_TYPE index = GetIndexFromId(ID);
+	EntityArr.erase(EntityArr.begin() + index);
 }
 
 Entity* App::GetEntityFromID(ENTITY_ID_DATA_TYPE ID)
@@ -109,7 +141,7 @@ std::vector<CType*> Entity::GetComponentsFromType()
 {
 	std::vector<CType*> List;
 	if (std::is_base_of<Component, CType>::value) {
-		for (COMPONENT_ID_DATA_TYPE i = 0; i <= ComponentArr.size(), i++) {
+		for (COMPONENT_ID_DATA_TYPE i = 0; i <= ComponentArr.size(); i++) {
 			CType* CurrentObj = static_cast<CType*>(&ComponentArr[i]);
 			if (CurrentObj) {
 				List.push_back(CurrentObj);
@@ -168,6 +200,10 @@ Component::Component(COMPONENT_ID_DATA_TYPE id, Entity* owner)
 	ComponentID = id;
 	Owner = owner;
 }
+
+//These 2 are here to prevent unresolved externals error
+void Component::Tick(float DeltaTime){}
+void Component::Reset(){}
 
 COMPONENT_ID_DATA_TYPE Component::GetID()
 {

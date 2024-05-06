@@ -3,15 +3,13 @@
 #include "BurbageConfig.h"
 #include <vector>
 
-void HelloProj();
-
 class Component;
 class Entity;
 
 class App {
 //general
 public:
-	void Run(); //Need to be given logic in a child class.
+	void Run(); //Should be given logic in a child class.
 	void Tick(float DeltaTime);
 	void Reset();
 

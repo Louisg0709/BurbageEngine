@@ -1,5 +1,4 @@
 #include "burbage.h"
+#include <iostream>
 
-int main(){
-    HelloProj();
-}
+class TestComponent
