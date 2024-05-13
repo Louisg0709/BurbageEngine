@@ -1,4 +1,3 @@
 #include "burbage.h"
-#include <iostream>
 
-class TestComponent
+#include <iostream>

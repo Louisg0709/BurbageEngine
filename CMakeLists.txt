@@ -226,20 +226,12 @@ if(LINUX)
     )
 endif()
 
-add_library(BurbageEngine
+add_executable(BurbageEngine
     "src/burbage.cpp"
     "src/include/burbage.h"
+    "src/ecs.cpp"
+    "src/include/ecs.h"
 )
-
-add_executable(BurbageDemo
-    "demo/main.cpp"
-)
-target_include_directories(BurbageDemo PRIVATE "src/include")
-#target_include_directories(BurbageDemo
-#    "src/include"
-#)
-
-target_link_libraries(BurbageDemo PRIVATE BurbageEngine)
 
 target_link_libraries(BurbageEngine PRIVATE  
     the-forge
